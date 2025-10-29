@@ -27,7 +27,7 @@ const __dirname = path.dirname(__filename);
 // ✅ FIXED CORS (added PATCH + "*" for safety)
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["https://yourtube2-0-five.vercel.app"],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // ✅ PATCH added
     credentials: true,
   })
