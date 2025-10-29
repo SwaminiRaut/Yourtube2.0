@@ -29,19 +29,17 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `CORS blocked request from origin: ${origin}`;
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    origin: [
+      "https://yourtube2-0-five.vercel.app",
+      "https://yourtube2-0-git-main-swamini-rauts-projects.vercel.app",
+      "https://yourtube2-0-amd70iksh-swamini-rauts-projects.vercel.app",
+      "http://localhost:3000"
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
-
 app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 
 app.use((req, res, next) => {
