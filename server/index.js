@@ -33,6 +33,7 @@ app.use(
       "http://localhost:3000",
       "https://yourtube2-0-five.vercel.app",
       "https://yourtube2-0-9t2o.onrender.com",
+      "https://yourtube2-0-9w53w1g0-swamini-rauts-projects.vercel.app",
     ],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
