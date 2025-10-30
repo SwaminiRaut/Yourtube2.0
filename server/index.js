@@ -29,25 +29,13 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: [
-      "https://yourtube2-0-five.vercel.app",
-      "https://yourtube2-0-git-main-swamini-rauts-projects.vercel.app",
-      "https://yourtube2-0-amd70iksh-swamini-rauts-projects.vercel.app",
-      "http://localhost:3000"
-    ],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // ✅ PATCH added
     credentials: true,
   })
 );
-app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", allowedOrigins[0]);
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
+// ✅ Body parser before routes
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "30mb", extended: true }));
