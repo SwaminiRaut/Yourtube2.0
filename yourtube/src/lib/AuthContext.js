@@ -328,7 +328,9 @@ export const UserProvider = ({ children }) => {
         ? phoneNumber
         : `+91${phoneNumber}`;
 
-      const res = await fetch("http://localhost:5000/user/verify", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://yourtube2-0-9t2o.onrender.com";
+
+      const res = await fetch(`${API_URL}/user/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phoneNumber: formattedPhone, otp }),
