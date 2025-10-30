@@ -29,11 +29,16 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // ✅ PATCH added
+    origin: [
+      "http://localhost:3000",
+      "https://yourtube2-0-five.vercel.app",
+      "https://yourtube2-0-9t2o.onrender.com",
+    ],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
   })
 );
+
 
 // ✅ Body parser before routes
 app.use(bodyParser.json());
