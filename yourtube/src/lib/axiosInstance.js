@@ -6,6 +6,8 @@ const baseURL =
     ? "http://localhost:5000"
     : "https://yourtube2-0-9t2o.onrender.com");
 
+console.log("Environment:", process.env.NODE_ENV, baseURL);
+
 const axiosInstance = axios.create({
   baseURL,
   withCredentials: true,
