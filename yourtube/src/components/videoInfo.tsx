@@ -137,7 +137,10 @@ const VideoInfo = ({ video }: any) => {
   };
 
   const handleDownload = async () => {
-  if (!user) return toast.error("Please sign in to download videos.");
+  if (!user) {
+    toast.error("Please sign in to download videos.");
+    return;
+  }
 
   try {
     const res = await axiosInstance.post(`/download/${video._id}`, {
@@ -153,13 +156,20 @@ const VideoInfo = ({ video }: any) => {
 
     if (error.response?.status === 403) {
       const { redirectUrl, message } = error.response.data;
-      toast.error(message || "Download limit reached!");
-      if (redirectUrl) window.location.href = redirectUrl; 
+
+      toast.error(message || "Upgrade to premium to download videos.");
+
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        router.push(`/premium?videoId=${video._id}`);
+      }
     } else {
       toast.error("Something went wrong while downloading.");
     }
   }
 };
+
 
 
 
