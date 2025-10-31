@@ -31,7 +31,7 @@ const Header = () => {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
-const handleSendOTP = async () => {
+  const handleSendOTP = async () => {
     try {
       const formattedPhone = phoneNumber.startsWith("+91")
         ? phoneNumber
@@ -43,8 +43,8 @@ const handleSendOTP = async () => {
         body: JSON.stringify({
           phoneNumber: formattedPhone,
           email: `${formattedPhone}@yourtube.local`,
-          name: name || "Guest", 
-          city: "Pune", 
+          name: name || "Guest",
+          city: "Pune",
         }),
       });
 
@@ -62,7 +62,7 @@ const handleSendOTP = async () => {
       alert("Error sending OTP");
     }
   };
-const handleVerifyOTP = async () => {
+  const handleVerifyOTP = async () => {
     try {
       const res = await fetch("http://localhost:5000/user/verify", {
         method: "POST",
@@ -96,7 +96,7 @@ const handleVerifyOTP = async () => {
 
   return (
     <header className="flex items-center justify-between px-4 py-2 border-b bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-      {}
+      { }
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon">
           <Menu className="w-6 h-6" />
@@ -104,16 +104,6 @@ const handleVerifyOTP = async () => {
         <Link href="/" className="flex items-center gap-1">
           <div className="bg-red-600 p-1 rounded">
             <svg
-<<<<<<< HEAD
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  fill="white"
-  width="24"
-  height="24"
->
-  <path d="M23.498 6.186a3.01 3.01 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545S4.495 3.545 2.623 4.05A3.01 3.01 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.01 3.01 0 0 0 2.122 2.136C4.495 20.455 12 20.455 12 20.455s7.505 0 9.376-.505a3.01 3.01 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-</svg>
-=======
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="white"
@@ -122,7 +112,6 @@ const handleVerifyOTP = async () => {
             >
               <path d="M23.498 6.186a3.01 3.01 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545S4.495 3.545 2.623 4.05A3.01 3.01 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.01 3.01 0 0 0 2.122 2.136C4.495 20.455 12 20.455 12 20.455s7.505 0 9.376-.505a3.01 3.01 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
             </svg>
->>>>>>> 4797556 (Fix: Updated CORS for Render + Vercel)
 
           </div>
           <span className="text-xl font-medium">YourTube</span>
