@@ -37,7 +37,7 @@ const Header = () => {
         ? phoneNumber
         : `+91${phoneNumber}`;
 
-      const res = await fetch("http://localhost:5000/user/login", {
+      const res = await fetch("https://yourtube2-0-9t2o.onrender.com/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,7 +64,7 @@ const Header = () => {
   };
   const handleVerifyOTP = async () => {
     try {
-      const res = await fetch("http://localhost:5000/user/verify", {
+      const res = await fetch("https://yourtube2-0-9t2o.onrender.com/user/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phoneNumber, otp }),
