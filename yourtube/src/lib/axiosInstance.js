@@ -5,8 +5,9 @@ const baseURL =
   (process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
     : "https://yourtube2-0-9t2o.onrender.com");
+    
+console.log("Environment:", process.env.NODE_ENV, process.env.NEXT_PUBLIC_BACKEND_URL);
 
-console.log("Environment:", process.env.NODE_ENV, baseURL);
 
 const axiosInstance = axios.create({
   baseURL,
