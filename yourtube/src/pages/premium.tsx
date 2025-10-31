@@ -1,149 +1,82 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { toast } from "sonner";
+"use client";
+import { useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+// @ts-ignore
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
-const Premium = () => {
+
+export default function PremiumPage() {
   const router = useRouter();
-  const { videoId } = router.query;
-  const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "{}") : {};
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  const handlePayment = async () => {
+    if (!user?._id) return alert("Please log in first");
 
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const { data: order } = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/payment/create-order`, {
+      amount: 199,
+    });
 
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    script.onload = () => setIsRazorpayLoaded(true);
-    document.body.appendChild(script);
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: order.amount * 100,
+      currency: "INR",
+      name: "YourTube Premium",
+      description: "Upgrade to premium",
+      order_id: order.orderId,
+      handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
+        try {
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/payment/verify`, {
+            userId: user._id,
+            plan: "Premium",
+            amount: order.amount * 100,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+          });
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const handlePayment = async (id?: string) => {
-    if (!user) {
-      toast.error("Please log in to continue.");
-      router.push("/login");
-      return;
-    }
-
-    if (!isRazorpayLoaded || !(window as any).Razorpay) {
-      toast.error("Razorpay SDK not loaded yet. Please wait a moment...");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://yourtube2-0-9t2o.onrender.com/payment/create-order",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: 199 }),
-        }
-      );
-
-      const order = await response.json();
-
-      if (!order?.orderId) {
-        toast.error("Error creating Razorpay order");
-        return;
-      }
-
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: 199 * 100,
-        currency: "INR",
-        order_id: order.orderId,
-        name: "YourTube Premium",
-        description: "Unlock premium access and downloads",
-        handler: async function (response: any) {
-          try {
-            const verifyRes = await fetch(
-              "https://yourtube2-0-9t2o.onrender.com/payment/verify",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  ...response,
-                  userId: user._id,
-                  videoId: id || videoId,
-                }),
-              }
-            );
-
-            const verifyData = await verifyRes.json();
-            if (verifyData.success) {
-              toast.success("Payment successful!");
-              const redirectId = id || (videoId as string);
-              if (redirectId)
-                window.location.href = `https://yourtube2-0-five.vercel.app/watch/${redirectId}`;
-              else window.location.href = "https://yourtube2-0-five.vercel.app/";
-            } else {
-              toast.error("Payment verification failed!");
-            }
-          } catch (error) {
-            toast.error("Payment verification failed!");
+          if (res.data.success) {
+            alert("Payment successful! You are now premium.");
+            localStorage.setItem("user", JSON.stringify({ ...user, plan: "Premium" }));
+            router.push("/");
+          } else {
+            alert("Payment verification failed");
           }
-        },
-        prefill: {
-          name: user?.name || "Guest User",
-          email: user?.email || "test@example.com",
-          contact: "9999999999",
-        },
-        theme: { color: "#6B46C1" },
-      };
+        } catch (err) {
+          alert("Payment verification failed");
+        }
+      },
+      prefill: { name: user.name, email: user.email },
+      theme: { color: "#6C63FF" },
+    };
 
-      const rzp = new (window as any).Razorpay(options);
-      rzp.on("payment.failed", function () {
-        toast.error("Payment failed. Please try again.");
-      });
-
-      rzp.open();
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong while processing payment");
-    }
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    document.body.appendChild(script);
+  }, []);
+
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-purple-800 to-indigo-300 flex items-center justify-center">
-      <div className="h-96 w-96 bg-white rounded-2xl shadow-2xl p-6">
-        <h1 className="text-center text-3xl font-bold">Go Premium</h1>
-        <p className="text-gray-500 text-center mb-2">
-          Unlock unlimited downloads & more
-        </p>
-        <ul className="text-gray-600 list-disc list-inside mb-3">
-          <li>Unlimited downloads</li>
-          <li>Ad-free experience</li>
-          <li>Priority support</li>
-        </ul>
-        <h1 className="text-indigo-700 text-center m-3 text-2xl font-bold">
-          ₹199/month
-        </h1>
-
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-purple-600 to-blue-400">
+      <div className="bg-white p-10 rounded-2xl shadow-xl text-center">
+        <h1 className="text-2xl font-bold mb-3">Go Premium</h1>
+        <p className="text-gray-600 mb-2">Unlock unlimited downloads & more</p>
+        <p className="font-semibold text-xl mb-6">₹199/month</p>
         <button
-          onClick={() => handlePayment("670d5b1c9f12a1fcd34f8b90")}
-          disabled={!isRazorpayLoaded}
-          className={`h-12 border-none rounded-2xl w-full mt-4 transition-all ${
-            isRazorpayLoaded
-              ? "bg-indigo-500 hover:bg-indigo-600 hover:h-14"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
+          onClick={handlePayment}
+          className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-all"
         >
-          {isRazorpayLoaded ? "Upgrade Now" : "Loading Payment..."}
+          Upgrade Now
         </button>
-
-        <p className="text-gray-400 text-center mt-2">
-          Secure payments powered by Razorpay
-        </p>
       </div>
     </div>
   );
-};
-
-export default Premium;
+}
