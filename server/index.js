@@ -59,7 +59,7 @@ app.use("/watch", watchlaterroutes);
 app.use("/history", historyrroutes);
 app.use("/comment", commentroutes);
 app.use("/download", downloadRoutes);
-app.use("/", paymentRoutes);
+app.use("/payment", paymentRoutes);
 app.use("/channel", channelRoutes);
 
 const PORT = process.env.PORT || 5000;
