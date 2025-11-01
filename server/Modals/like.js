@@ -16,7 +16,6 @@ const likeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate likes by same user on same video
 likeSchema.index({ video: 1, user: 1 }, { unique: true });
 
 const Like = mongoose.models.Like || mongoose.model("Like", likeSchema);
