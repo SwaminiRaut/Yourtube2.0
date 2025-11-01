@@ -21,7 +21,7 @@ const Header = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [name, setName] = useState("");
   const [otp, setOtp] = useState("");
-  const [step, setStep] = useState("phone"); // phone | otp | done
+  const [step, setStep] = useState("phone"); 
   const [isdialogeopen, setisdialogeopen] = useState(false);
   const router = useRouter();
 
