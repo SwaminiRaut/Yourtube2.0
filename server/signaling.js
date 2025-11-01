@@ -1,21 +1,20 @@
+import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const SIGNAL_PORT = process.env.WS_PORT || 8080;
-
-const httpServer = http.createServer();
-
-const io = new Server(httpServer, {
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
   cors: {
-    origin: "*", 
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-const connectedUsers = new Map(); 
+const connectedUsers = new Map();
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
@@ -29,7 +28,7 @@ io.on("connection", (socket) => {
     const targetSocket = connectedUsers.get(targetUserId);
     if (targetSocket) {
       io.to(targetSocket).emit("offer", { from: socket.id, offer });
-      console.log(`📡 Offer sent to ${targetUserId}`);
+      console.log(`Offer sent to ${targetUserId}`);
     }
   });
 
@@ -61,8 +60,11 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 8080;
-httpServer.listen(PORT, "0.0.0.0", () => {
-  console.log(`Signaling server running on port ${PORT}`);
+app.get("/", (req, res) => {
+  res.send("Signaling server is running!");
 });
 
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Signaling server running on port ${PORT}`);
+});
