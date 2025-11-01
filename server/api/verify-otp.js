@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const User = require("../Modals/User");
 
-app.use(cors({ origin: "http://localhost:3000" })); // allow Next.js dev server
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
 app.post("/verify-otp", async (req, res) => {
     const { userId, otp } = req.body;
