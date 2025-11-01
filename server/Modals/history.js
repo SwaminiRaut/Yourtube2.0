@@ -4,12 +4,12 @@ const historyschema = mongoose.Schema(
   {
     viewer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user", // ✅ correct reference to User model
+      ref: "user",
       required: true,
     },
     videoid: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "videofiles", // ✅ FIXED: now references video model
+      ref: "videofiles", 
       required: true,
     },
     likedon: { type: Date, default: Date.now },
