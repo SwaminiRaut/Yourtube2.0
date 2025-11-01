@@ -44,7 +44,7 @@ export const handleDownload = async (req, res) => {
           success: false,
           reason: "limit_reached",
           message: "Free users can download only one video per day.",
-          redirectUrl: `https://yourtube2-0-five.vercel.app/premium?videoId=${videoId}`, // ⚡ use your real URL
+          redirectUrl: `https://yourtube2-0-five.vercel.app/premium?videoId=${videoId}`, 
         });
       }
     }
