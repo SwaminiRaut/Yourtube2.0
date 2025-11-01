@@ -73,7 +73,7 @@ const Comments = ({ videoId }: { videoId: string }) => {
     if (!user || !newComment.trim()) return;
     setIsSubmitting(true);
     try {
-      const city = await getCityFromIP(); // ✅ fetch live city
+      const city = await getCityFromIP(); 
       const res = await axiosInstance.post(`/comment/postcomment`, {
         videoid: videoId,
         userid: user._id,
@@ -161,54 +161,54 @@ const Comments = ({ videoId }: { videoId: string }) => {
   };
 
   const translateComment = async (comment: Comment, lang: string) => {
-    // Store original text in case of failure
-    const originalText = comment.commentbody;
+  const originalText = comment.commentbody;
 
-    // Show "Translating..." optimistically
-    setComments((prev) =>
-      prev.map((c) =>
-        c._id === comment._id ? { ...c, commentbody: "Translating..." } : c
-      )
-    );
+  // Show "Translating..." optimistically
+  setComments((prev) =>
+    prev.map((c) =>
+      c._id === comment._id ? { ...c, commentbody: "Translating..." } : c
+    )
+  );
 
-    try {
-      const res = await fetch("/api/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ q: originalText, target: lang }),
-      });
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: String(originalText || ""),
+        target: String(lang || "en"),
+      }),
+    });
 
-      const data = await res.json();
-      console.log("🔄 Translation API Response:", data);
+    const data = await res.json();
+    console.log("Translation API Response:", data);
 
-      if (res.ok && data.translatedText) {
-        // ✅ Update with translated text
-        setComments((prev) =>
-          prev.map((c) =>
-            c._id === comment._id
-              ? { ...c, commentbody: data.translatedText }
-              : c
-          )
-        );
-      } else {
-        console.error("⚠️ Translation failed:", data);
-        // Revert to original text
-        setComments((prev) =>
-          prev.map((c) =>
-            c._id === comment._id ? { ...c, commentbody: originalText } : c
-          )
-        );
-      }
-    } catch (err) {
-      console.error("Translation request error:", err);
-      // Revert to original text
+    if (res.ok && data?.translatedText) {
+      setComments((prev) =>
+        prev.map((c) =>
+          c._id === comment._id
+            ? { ...c, commentbody: data.translatedText }
+            : c
+        )
+      );
+    } else {
+      console.error("Translation failed:", data);
       setComments((prev) =>
         prev.map((c) =>
           c._id === comment._id ? { ...c, commentbody: originalText } : c
         )
       );
     }
-  };
+  } catch (err) {
+    console.error("Translation request error:", err);
+    setComments((prev) =>
+      prev.map((c) =>
+        c._id === comment._id ? { ...c, commentbody: originalText } : c
+      )
+    );
+  }
+};
+
 
 
 
