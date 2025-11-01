@@ -1,5 +1,3 @@
-// src/pages/api/create-order.ts
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import Razorpay from "razorpay";
 const razorpay = new Razorpay({
@@ -11,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { amount } = req.body; // e.g. 199
+    const { amount } = req.body; 
 
     const options = {
       amount: amount*100,
