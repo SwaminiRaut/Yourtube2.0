@@ -4,12 +4,12 @@ const downloadSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",   // should match your User model name
+      ref: "User",   
       required: true,
     },
     video: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "videofiles",  // should match your Video model name
+      ref: "videofiles", 
       required: true,
     },
     downloadedOn: {
