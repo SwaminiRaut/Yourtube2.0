@@ -163,7 +163,6 @@ const Comments = ({ videoId }: { videoId: string }) => {
   const translateComment = async (comment: Comment, lang: string) => {
   const originalText = comment.commentbody;
 
-  // Show "Translating..." optimistically
   setComments((prev) =>
     prev.map((c) =>
       c._id === comment._id ? { ...c, commentbody: "Translating..." } : c
