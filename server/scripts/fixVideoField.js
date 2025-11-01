@@ -7,25 +7,25 @@ dotenv.config();
 const DBURL = process.env.DB_URL;
 
 if (!DBURL) {
-  console.error("❌ DB_URL is missing in your .env file");
+  console.error("DB_URL is missing in your .env file");
   process.exit(1);
 }
 
 const fixVideoField = async () => {
   try {
     await mongoose.connect(DBURL);
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     const result = await video.updateMany(
-      { videochannel: { $exists: false } }, // only fix where field is missing
+      { videochannel: { $exists: false } }, 
       { $set: { videochannel: "Unknown Channel" } }
     );
 
-    console.log(`✅ Fixed ${result.modifiedCount} documents`);
+    console.log(`Fixed ${result.modifiedCount} documents`);
     await mongoose.disconnect();
-    console.log("🔌 Disconnected from MongoDB");
+    console.log("Disconnected from MongoDB");
   } catch (error) {
-    console.error("❌ Error fixing videochannel field:", error);
+    console.error("Error fixing videochannel field:", error);
     process.exit(1);
   }
 };
