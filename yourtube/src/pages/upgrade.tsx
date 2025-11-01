@@ -12,66 +12,74 @@ const Upgrade = () => {
   }, []);
 
   const handlePayment = async (plan: "Bronze" | "Silver" | "Gold", rupees: number) => {
-  try {
-    const orderRes = await fetch("https://yourtube2-0-9t2o.onrender.com/payment/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: rupees * 1000 }), 
-    });
+    try {
+      const orderRes = await fetch("https://yourtube2-0-9t2o.onrender.com/payment/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: rupees * 100 }),
+      });
 
-    if (!orderRes.ok) {
-      throw new Error("Failed to create Razorpay order");
+      if (!orderRes.ok) {
+        throw new Error("Failed to create Razorpay order");
+      }
+
+      const order = await orderRes.json();
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+        name: "YourTube Clone",
+        description: `${plan} Plan Subscription`,
+        handler: async function (res: any) {
+          const userId = localStorage.getItem("userId");
+          if (!userId) return alert("User not logged in!");
+
+          const verifyRes = await fetch("https://yourtube2-0-9t2o.onrender.com/payment/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpayPaymentId: res.razorpay_payment_id,
+              razorpayOrderId: res.razorpay_order_id,
+              razorpaySignature: res.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyRes.json();
+          if (!verifyData.success) return alert("Payment verification failed");
+
+          const activateRes = await fetch("https://yourtube2-0-9t2o.onrender.com/user/activate-plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, planType: plan }),
+          });
+
+          const updatedUser = await activateRes.json();
+          if (updatedUser.success) {
+            localStorage.setItem("userPlan", updatedUser.user.planType);
+            alert(`${plan} plan activated!`);
+            window.location.reload(); 
+          } else {
+            alert("Failed to activate plan!");
+          }
+
+        },
+        prefill: {
+          name: "Swamini Raut",
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+        theme: { color: "#6B46C1" },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      alert("Payment failed. Try again.");
     }
-
-    const order = await orderRes.json();
-
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: "INR",
-      order_id: order.id,
-      name: "YourTube Clone",
-      description: `${plan} Plan Subscription`,
-      handler: async function (res: any) {
-        const userId = localStorage.getItem("userId");
-        if (!userId) return alert("User not logged in!");
-
-        const verifyRes = await fetch("https://yourtube2-0-9t2o.onrender.com/payment/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            razorpayPaymentId: res.razorpay_payment_id,
-            razorpayOrderId: res.razorpay_order_id,
-            razorpaySignature: res.razorpay_signature,
-          }),
-        });
-
-        const verifyData = await verifyRes.json();
-        if (!verifyData.success) return alert("Payment verification failed");
-
-        await fetch("https://yourtube2-0-9t2o.onrender.com/user/activate-plan", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, planType: plan }),
-        });
-
-        alert(`${plan} plan activated!`);
-      },
-      prefill: {
-        name: "Swamini Raut",
-        email: "test@example.com",
-        contact: "9999999999",
-      },
-      theme: { color: "#6B46C1" },
-    };
-
-    const rzp = new (window as any).Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error(err);
-    alert("Payment failed. Try again.");
-  }
-};
+  };
 
 
   return (
