@@ -52,12 +52,12 @@ const Upgrade = () => {
           const activateRes = await fetch("https://yourtube2-0-9t2o.onrender.com/user/activate-plan", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId, planType: plan }),
+            body: JSON.stringify({ userId, planType: plan.toLowerCase() }),
           });
 
           const updatedUser = await activateRes.json();
           if (updatedUser.success) {
-            localStorage.setItem("userPlan", updatedUser.user.planType);
+            localStorage.setItem("userPlan", updatedUser.user.plan.toLowerCase());
             alert(`${plan} plan activated!`);
             window.location.reload(); 
           } else {
