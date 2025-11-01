@@ -3,7 +3,6 @@ import PDFDocument from "pdfkit";
 import { Readable } from "stream";
 
 export const sendInvoiceEmail = async (to: string, plan: string, amount: number) => {
-  // 1️⃣ Generate PDF invoice in memory
   const doc = new PDFDocument();
   let buffers: Buffer[] = [];
 
@@ -11,7 +10,6 @@ export const sendInvoiceEmail = async (to: string, plan: string, amount: number)
   doc.on("end", async () => {
     const pdfData = Buffer.concat(buffers);
 
-    // 2️⃣ Send email with PDF attachment
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
