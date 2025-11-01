@@ -141,7 +141,7 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
         onClick={handleEnableCamera}
         className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
       >
-        🎥 Enable Camera
+        Enable Camera
       </button>
 
       <div className="flex gap-4">
@@ -155,7 +155,7 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
             onClick={handleStartCall}
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
-            🎥 Start Call
+            Start Call
           </button>
         )}
         {isCallActive && (
@@ -164,19 +164,19 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
               onClick={handleScreenShare}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              🖥️ Share Screen
+              Share Screen
             </button>
             <button
               onClick={handleRecord}
               className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
             >
-              {recorder ? "⏹️ Stop Recording" : "🔴 Record"}
+              {recorder ? "Stop Recording" : "Record"}
             </button>
             <button
               onClick={handleEndCall}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
             >
-              ❌ End Call
+              End Call
             </button>
           </>
         )}
@@ -185,7 +185,7 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
       {recordingUrl && (
         <div className="mt-4">
           <a href={recordingUrl} download="recording.webm" className="text-blue-600 underline">
-            📁 Download Recording
+            Download Recording
           </a>
         </div>
       )}
