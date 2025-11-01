@@ -57,7 +57,7 @@ const Premium = () => {
             await fetch("https://yourtube2-0-9t2o.onrender.com/payment/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              credentials: "include", // stay logged in
+              credentials: "include",
               body: JSON.stringify(response),
             });
 
