@@ -23,9 +23,6 @@ import {
   onOffer,
   onAnswer,
   onCandidate,
-  sendOffer,
-  sendAnswer,
-  sendCandidate,
 } from "@/utils/signalling";
 
 export default function VideoCall({ currentUserId, targetUserId }: { currentUserId: string; targetUserId: string }) {
@@ -37,7 +34,6 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
   const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
 
-  // 🔹 Enumerate video devices
   useEffect(() => {
     async function fetchDevices() {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -48,17 +44,19 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
     fetchDevices();
   }, []);
 
-  // 🔹 Initialize local media with selected device
   useEffect(() => {
     if (!selectedDeviceId) return;
     (async () => {
-      const stream = await initLocalMedia(selectedDeviceId);
-      attachLocalStreamToVideo(localVideoRef.current, stream, true);
-      createEmptyRemoteStreamIfMissing();
+      try {
+        const stream = await initLocalMedia(selectedDeviceId);
+        attachLocalStreamToVideo(localVideoRef.current, stream, true);
+        createEmptyRemoteStreamIfMissing();
+      } catch (err) {
+        console.error("Camera initialization failed:", err);
+      }
     })();
   }, [selectedDeviceId]);
 
-  // 🔹 Socket initialization and signaling listeners
   useEffect(() => {
     initSocket();
     registerUser(currentUserId);
@@ -82,27 +80,39 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
     };
   }, [currentUserId]);
 
+  const handleEnableCamera = async () => {
+    try {
+      const stream = await initLocalMedia(selectedDeviceId || undefined);
+      attachLocalStreamToVideo(localVideoRef.current, stream, true);
+      createEmptyRemoteStreamIfMissing();
+    } catch (err) {
+      console.error("Camera initialization failed:", err);
+      alert((err as Error).message);
+    }
+  };
 
-  // Start Call
   const handleStartCall = async () => {
     await startCall(targetUserId);
     setIsCallActive(true);
   };
 
-  // End Call
   const handleEndCall = () => {
     closePeerConnection();
     stopLocalMedia();
     setIsCallActive(false);
   };
 
-  // Screen Share
   const handleScreenShare = async () => {
     await startScreenShare();
   };
 
-  // Recording
   const handleRecord = async () => {
+    let stream = getLocalStream();
+    if (!stream) {
+      stream = await initLocalMedia(selectedDeviceId || undefined);
+      attachLocalStreamToVideo(localVideoRef.current, stream, true);
+    }
+
     if (recorder) {
       const url = await stopRecording(recorder);
       setRecorder(null);
@@ -126,6 +136,14 @@ export default function VideoCall({ currentUserId, targetUserId }: { currentUser
           </option>
         ))}
       </select>
+
+      <button
+        onClick={handleEnableCamera}
+        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+      >
+        🎥 Enable Camera
+      </button>
+
       <div className="flex gap-4">
         <video ref={localVideoRef} className="w-64 h-48 bg-black rounded-xl" muted playsInline autoPlay />
         <video ref={remoteVideoRef} className="w-64 h-48 bg-black rounded-xl" playsInline autoPlay />
