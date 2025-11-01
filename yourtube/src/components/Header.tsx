@@ -81,6 +81,7 @@ const Header = () => {
         alert("Error: No user returned from server");
         return;
       }
+      localStorage.setItem("userId", data.user._id);
 
       login(data.user);
       alert(`Welcome, ${data.user.name || "User"}!`);
