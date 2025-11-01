@@ -8,14 +8,13 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 export default function VideoCard({ video }: any) {
   if (!video) return null;
 
-  const backend = process.env.NEXT_PUBLIC_BACKEND_URL || ""; // fallback to empty string
+  const backend = process.env.NEXT_PUBLIC_BACKEND_URL || ""; 
   const videoPath = video.filepath ? video.filepath.replace(/\\/g, "/") : "";
   const videoURL = backend && videoPath ? `${backend}/${videoPath}` : "";
 
   const [duration, setDuration] = useState<string>("0:00");
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Load video metadata to get duration
   useEffect(() => {
     const vid = videoRef.current;
     if (vid) {
@@ -41,7 +40,6 @@ export default function VideoCard({ video }: any) {
   return (
     <Link href={`/watch/${video._id}`} className="group">
       <div className="space-y-3 bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-        {/* Video Thumbnail */}
 
         <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
           {thumbnailURL ? (
@@ -60,8 +58,6 @@ export default function VideoCard({ video }: any) {
           </div>
         </div>
 
-
-        {/* Video Info */}
         <div className="flex gap-3">
           <Avatar className="w-9 h-9 flex-shrink-0">
             <AvatarFallback>{video.videochannel?.[0] || "?"}</AvatarFallback>
