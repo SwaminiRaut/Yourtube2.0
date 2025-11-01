@@ -1,5 +1,5 @@
 import express from "express";
-import Comment from "../Modals/comment.js"; // ✅ VERY IMPORTANT
+import Comment from "../Modals/comment.js"; 
 
 import {
   postcomment,
@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/postcomment", postcomment);
 router.get("/:videoid", getallcomment);
 router.delete("/deletecomment/:id", deletecomment);
-router.patch("/editcomment/:id", editcomment); // ✅ PATCH used
+router.patch("/editcomment/:id", editcomment); 
 
 router.put("/:id/like", async (req, res) => {
   try {
