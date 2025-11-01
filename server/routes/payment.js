@@ -21,7 +21,7 @@ router.post("/create-order", async (req, res) => {
     }
 
     const options = {
-      amount: amount * 100, 
+      amount: amount * 100,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
@@ -41,9 +41,10 @@ router.post("/verify-payment", async (req, res) => {
       razorpay_payment_id,
       razorpay_signature,
       userId,
+      amount,
     } = req.body;
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !userId) {
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !userId || !amount) {
       return res.status(400).json({ success: false, message: "Missing payment details" });
     }
 
@@ -64,11 +65,10 @@ router.post("/verify-payment", async (req, res) => {
 
     user.plan = "premium";
     user.isPremium = true;
-    user.planExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); 
+    user.planExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
     await user.save();
 
     const pdfBuffer = await generateInvoicePDF(user, razorpay_payment_id, amount);
-
     await sendPaymentEmail(user.email, pdfBuffer);
 
     res.status(200).json({
