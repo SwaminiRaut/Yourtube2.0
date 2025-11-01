@@ -22,10 +22,8 @@ export const postcomment = async (req, res) => {
       city: city || "unknown"
     });
 
-    // ✅ Save first
     await newComment.save();
 
-    // ✅ Then populate after saving
     const populatedComment = await newComment.populate("userid", "_id name image city");
     
     return res.status(201).json({
