@@ -4,12 +4,12 @@ const commentschema = mongoose.Schema(
   {
     userid: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user", // ✅ Correct reference for user
+      ref: "user", 
       required: true,
     },
     videoid: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "videofiles", // ✅ FIXED: reference your video model
+      ref: "videofiles", 
       required: true,
     },
     likes:{
@@ -27,7 +27,7 @@ const commentschema = mongoose.Schema(
     },
     commentbody: {
       type: String,
-      required: true, // ✅ Make sure a comment can't be empty
+      required: true,
       trim: true,
     },
     commentedon: {
