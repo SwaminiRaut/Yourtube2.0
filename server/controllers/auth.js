@@ -28,7 +28,6 @@ const calculateTheme = (user) => {
   return "dark";
 };
 
-// ---------------- Helper: generate and send OTP ----------------
 const sendOTP = async (user) => {
   const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
   const SouthStates = ["tamil nadu", "kerala", "karnataka", "andhra pradesh", "telangana"];
@@ -76,7 +75,6 @@ export const login = async (req, res) => {
     let user = await Users.findOne({ email });
 
     if (!user) {
-      // ✅ Create a new user with the entered name
       user = await Users.create({
         email,
         name: name && name !== "Guest" ? name : "User",
@@ -89,7 +87,6 @@ export const login = async (req, res) => {
         phoneNumber,
       });
     } else {
-      // ✅ Update name if old one is missing or "Guest"
       let updated = false;
       if (name && name !== "Guest" && user.name === "Guest") {
         user.name = name;
@@ -125,7 +122,6 @@ export const login = async (req, res) => {
   }
 };
 
-// ---------------- VERIFY OTP ----------------
 export const verifyOTP = async (req, res) => {
   try {
     const { phoneNumber, otp } = req.body;
@@ -151,7 +147,6 @@ export const verifyOTP = async (req, res) => {
   }
 };
 
-// ---------------- GET USER ----------------
 export const getUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -178,7 +173,6 @@ export const getUser = async (req, res) => {
   }
 };
 
-// ---------------- UPDATE PROFILE ----------------
 export const updateprofile = async (req, res) => {
   const { id: _id } = req.params;
   const { channelname, description, city, plan, time } = req.body;
