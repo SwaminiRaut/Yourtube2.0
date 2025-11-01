@@ -16,7 +16,7 @@ const Upgrade = () => {
     const orderRes = await fetch("https://yourtube2-0-9t2o.onrender.com/payment/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: rupees * 100 }), 
+      body: JSON.stringify({ amount: rupees * 1000 }), 
     });
 
     if (!orderRes.ok) {
