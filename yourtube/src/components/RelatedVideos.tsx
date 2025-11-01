@@ -5,7 +5,6 @@ import React from "react";
 const RelatedVideos = ({ videos }: any) => {
   const getVideoURL = (video: any) => {
     if (!video?.filepath) return null;
-    // Combine backend URL + video filepath
     return `${process.env.NEXT_PUBLIC_BACKEND_URL}${video.filepath.replace(/\\/g, "/")}`;
   };
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
