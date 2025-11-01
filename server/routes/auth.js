@@ -9,7 +9,6 @@ routes.post("/verify", verifyOTP);
 routes.patch("/update/:id", updateprofile);
 routes.get("/:id", getUser);
 
-// ✅ New route to fetch user info by ID
 routes.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -20,7 +19,7 @@ routes.get("/:id", async (req, res) => {
       name: user.name,
       email: user.email,
       image: user.image,
-      city: user.city || "unknown", // send city
+      city: user.city || "unknown",
       time:user.time,
     });
   } catch (err) {
