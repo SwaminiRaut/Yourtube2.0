@@ -2,16 +2,17 @@ import User from "../Modals/User.js";
 
 export const activatePlan = async (req, res) => {
   try {
-    const { userId, planType } = req.body; // "bronze", "silver", or "gold"
-    const duration = 30; // days
+    const { userId, planType } = req.body;
+    const duration = 30;
 
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!user)
+      return res.status(404).json({ success: false, message: "User not found" });
 
     const expiry = new Date();
     expiry.setDate(expiry.getDate() + duration);
 
-    user.plan = planType;
+    user.plan = planType.toLowerCase();
     user.planExpiry = expiry;
     user.isPremium = true;
     await user.save();
