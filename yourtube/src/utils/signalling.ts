@@ -89,7 +89,7 @@
 
 import { io, Socket } from "socket.io-client";
 
-const SIGNAL_URL = process.env.NEXT_PUBLIC_SIGNAL_URL || "http://localhost:8080";
+const SIGNAL_URL = process.env.NEXT_PUBLIC_SIGNAL_URL || "https://yourtube2-0-1-xtau.onrender.com";
 let socket: Socket | null = null;
 let isConnected = false;
 let currentUserId: string | null = null;
