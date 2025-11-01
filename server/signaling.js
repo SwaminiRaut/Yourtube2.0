@@ -61,7 +61,8 @@ io.on("connection", (socket) => {
   });
 });
 
-// Start the signaling server
-httpServer.listen(SIGNAL_PORT, () => {
-  console.log(`Signaling server running on port ${SIGNAL_PORT}`);
+const PORT = process.env.PORT || 8080;
+httpServer.listen(PORT, "0.0.0.0", () => {
+  console.log(`Signaling server running on port ${PORT}`);
 });
+
