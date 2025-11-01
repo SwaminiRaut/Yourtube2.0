@@ -76,7 +76,6 @@ const Searchresult = ({ query }: any) => {
   const vids = "/video/vdo.mp4";
   return (
     <div className="space-y-6">
-      {/* Video Results */}
       {video.length > 0 && (
         <div className="space-y-4">
           {video.map((video: any) => (
@@ -134,7 +133,6 @@ const Searchresult = ({ query }: any) => {
         </div>
       )}
 
-      {/* Load More Results */}
       {hasResults && (
         <div className="text-center py-8">
           <p className="text-gray-600">
