@@ -40,8 +40,6 @@ app.use(
   })
 );
 
-
-// ✅ Body parser before routes
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "30mb", extended: true }));
