@@ -106,28 +106,33 @@ export const UserProvider = ({ children }) => {
     } else {
       applyTheme("light");
     }
-
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+
+    // Firebase auth listener
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
-        try {
-          const payload = {
-            email: firebaseUser.email,
-            name: firebaseUser.displayName || "Unknown",
-            image: firebaseUser.photoURL || "https://github.com/shadcn.png",
-          };
+      //   try {
+      //     const payload = {
+      //       email: firebaseUser.email,
+      //       name: firebaseUser.displayName || "Unknown",
+      //       image: firebaseUser.photoURL || "https://github.com/shadcn.png",
+      //     };
 
-          const response = await axiosInstance.post("/user/login", payload);
-          const data = response.data;
+      //     const response = await axiosInstance.post("/user/login", payload);
+      //     const data = response.data;
 
-          login({
-            ...data.user,
-            theme: data.theme || "dark",
-          });
-        } catch (error) {
-          console.error("Firebase auth sync error:", error);
-          logout();
-        }
-      } else {
+      //     login({
+      //       ...data.user,
+      //       theme: data.theme || "dark",
+      //     });
+      //   } catch (error) {
+      //     console.error("Firebase auth sync error:", error);
+      //     logout();
+      //   }
+      // }
+      console.log("Firebase user detected");
+      }
+      else {
         logout();
       }
     });

@@ -14,17 +14,28 @@ const transporter = nodemailer.createTransport({
 const calculateTheme = (user) => {
   const SouthStates = ["tamil nadu", "kerala", "karnataka", "andhra", "telangana"];
   const normalizedCity = (user.city || "").trim().toLowerCase();
+
   let hours;
 
   if (user.timezone) {
     hours = parseInt(
-      new Date().toLocaleString("en-US", { timeZone: user.timezone, hour: "numeric", hour12: false })
+      new Date().toLocaleString("en-US", {
+        timeZone: user.timezone,
+        hour: "numeric",
+        hour12: false,
+      })
     );
-  } else {
+  } else if (user.time) {
     hours = new Date(user.time).getHours();
+  } else {
+    // ✅ fallback (THIS FIXES YOUR ERROR)
+    hours = new Date().getHours();
   }
 
-  if (hours >= 10 && hours <= 12 && SouthStates.includes(normalizedCity)) return "white";
+  if (hours >= 10 && hours <= 12 && SouthStates.includes(normalizedCity)) {
+    return "white";
+  }
+
   return "dark";
 };
 
@@ -56,8 +67,16 @@ const sendOTP = async (user) => {
   }
 
   if (!user.phoneNumber) {
-    return "require-phone"; 
-  }
+  // fallback to email OTP instead of failing
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Your OTP Code",
+    text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
+  });
+
+  return "email";
+}
 
   await client.messages.create({
     body: `Your OTP is ${otp}. It will expire in 5 minutes.`,
@@ -105,13 +124,13 @@ export const login = async (req, res) => {
 
 
     const theme = calculateTheme(user);
-    const otpsentvia = await sendOTP(user);
+    // const otpsentvia = await sendOTP(user);
 
-    if (otpsentvia === "require-phone") {
-      return res.status(400).json({ message: "Phone number required for SMS OTP" });
-    }
+    // if (otpsentvia === "require-phone") {
+    //   return res.status(400).json({ message: "Phone number required for SMS OTP" });
+    // }
 
-    return res.status(user.isNew ? 201 : 200).json({
+    return res.status(200).json({
       message: "Login successful",
       user,
       theme: calculateTheme(user),

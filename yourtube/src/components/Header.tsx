@@ -16,7 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Header = () => {
-  const { user, login, logout, handlegooglesignin } = useUser();
+  const { user, login, logout, handleGoogleSignIn } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [name, setName] = useState("");
@@ -31,6 +31,8 @@ const Header = () => {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
+
+
   const handleSendOTP = async () => {
     try {
       const formattedPhone = phoneNumber.startsWith("+91")
@@ -140,6 +142,17 @@ const Header = () => {
       <div className="flex items-center gap-2">
         {!user ? (
           <>
+            <Button
+              onClick={handleGoogleSignIn}
+              className="bg-white text-black border flex items-center gap-2"
+            >
+              <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="google"
+                className="w-5 h-5"
+              />
+              Continue with Google
+            </Button>
             {step === "phone" && (
               <>
                 <input
